@@ -6,12 +6,12 @@ from github import Github
 
 def main():
     url = "https://raw.githubusercontent.com/Cisco-Talos/IOCs/main/2024/04/large-scale-brute-force-activity-targeting-vpns-ssh-services-with-commonly-used-login-credentials.txt"
-    repo_owner = "pfchopz"
-    repo_name = "threat-feed"
-    git_file_path = "threat-feed.txt"
+    repo_owner = os.getenv("REPO_OWNER")
+    repo_name = os.getenv("REPO_NAME")
+    git_file_path = os.getenv("GIT_FILE_PATH")
     github_token = os.getenv("GITHUB_TOKEN")
-    local_file = "threat-feed.txt"
-    branch_name = "master"
+    local_file = "/tmp/threat-feed.txt"
+    branch_name = os.getenv("GIT_BRANCH_NAME")
 
     write_valid_ips_to_file(get_threat_feed(url), local_file)
     update_github_file(repo_owner, repo_name, git_file_path, github_token, local_file, branch_name)
@@ -72,6 +72,9 @@ def update_github_file(repo_owner, repo_name, file_path, github_token, local_fil
         branch=branch_name
     )
     print("File updated successfully!")
+    
+def handler(event, context):
+    main()
 
 
 if __name__ == '__main__':
