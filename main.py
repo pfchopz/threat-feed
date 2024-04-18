@@ -11,9 +11,10 @@ def main():
     git_file_path = "threat-feed.txt"
     github_token = os.getenv("GITHUB_TOKEN")
     local_file = "threat-feed.txt"
+    branch_name = "master"
 
     write_valid_ips_to_file(get_threat_feed(url), local_file)
-    update_github_file(repo_owner, repo_name, git_file_path, github_token, local_file)
+    update_github_file(repo_owner, repo_name, git_file_path, github_token, local_file, branch_name)
 
 
 def get_threat_feed(url):
@@ -48,7 +49,7 @@ def write_valid_ips_to_file(threat_feed, output_file):
             if is_valid_ip(new_line):
                 f.write(new_line + "\n")
 
-def update_github_file(repo_owner, repo_name, file_path, github_token, local_file):
+def update_github_file(repo_owner, repo_name, file_path, github_token, local_file, branch_name):
     # Authenticate with GitHub using the provided token
     g = Github(github_token)
 
@@ -68,7 +69,7 @@ def update_github_file(repo_owner, repo_name, file_path, github_token, local_fil
         message="Updated file via API",
         content=new_content,
         sha=file_content.sha,
-        branch="main"  # Replace with the branch name if it's not main
+        branch=branch_name
     )
     print("File updated successfully!")
 
